@@ -1,6 +1,6 @@
 {
   "name": "torqnlp-restful-app",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Create a Node.js app for building production-ready RESTful APIs using Express, by running one command",
   "main": "src/index.js",
   "repository": {
