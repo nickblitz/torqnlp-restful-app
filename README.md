@@ -5,7 +5,7 @@ This repo serves as a dependency that is imported here https://github.com/nickbl
 
 ## Quick Start
 
-View instructions here on how to start the Express app in Firebase http://127.0.0.1:5001/torqnlp/us-central1/app
+View instructions here on how to start the Express app in Firebase https://github.com/nickblitz/torqnlp-react-app#run-express-api-application
 
 ## Commands
 
