@@ -16,7 +16,7 @@ const getCompletions = async (prompt, model) => {
     return await openai.createCompletion({
         prompt,
         model,
-        max_tokens: 5,
+        max_tokens: 50,
     }).catch((error) => {
         console.log(error);
     });

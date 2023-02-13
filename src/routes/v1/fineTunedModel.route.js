@@ -8,15 +8,21 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(validate(fineTunedModelValidation.getModels), fineTunedModelController.getModels);
+  .get(
+    // TODO: Add auth middleware permissions here
+    // auth('canViewFineTunedModels'), 
+    validate(fineTunedModelValidation.getModels), 
+    fineTunedModelController.getModels);
 
 router
   .route('/:modelId')
   .post(
+    // TODO: Add auth middleware permissions here
     auth('manageFineTunedModels'), 
     validate(fineTunedModelValidation.createModel), 
     fineTunedModelController.createModel)
   .delete(
+    // TODO: Add auth middleware permissions here
     auth('manageFineTunedModels'), 
     validate(fineTunedModelValidation.deleteModel), 
     fineTunedModelController.deleteModel);
@@ -24,6 +30,7 @@ router
 router
   .route('/:modelId/completion')
   .post(
+    // TODO: Add auth middleware permissions here
     // auth('canDoCompletions'), 
     validate(fineTunedModelValidation.createCompletion), 
     fineTunedModelController.createCompletion)
@@ -41,8 +48,8 @@ module.exports = router;
  * @swagger
  * /fineTuendModels:
  *   get:
- *     summary: Get all users
- *     description: Only admins can retrieve all users.
+ *     summary: Get all fine-tuned models
+ *     description: Returns a list of fine-tuned models.
  *     responses:
  *       "200":
  *         description: OK
@@ -54,7 +61,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/FineTunedModel'
  *                 page:
  *                   type: integer
  *                   example: 1
