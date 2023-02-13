@@ -66,8 +66,11 @@ List of available routes:
 
 **Fine-Tuned Models routes**:\
 `GET /v1/fineTunedModel` - get's all finedTunedModels created
+
 `POST /v1/fineTunedModel` - Creates a fine tuned model
+
 `DELETE /v1/fineTunedModel/:modelId` - delete fine tuned model
+
 `POST /v1/fineTunedModel/:modelId/completion` - Creates a completion with a given prompt and model
 
 
