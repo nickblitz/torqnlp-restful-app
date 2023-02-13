@@ -1,4 +1,4 @@
-# RESTful API Node Server Boilerplate
+# RESTful Express API
 
 An express API to serve endpoints to the React application on firebase. The API is ran on a Firebase function.
 This repo serves as a dependency that is imported here https://github.com/nickblitz/torqnlp-react-app/blob/main/functions/index.js
