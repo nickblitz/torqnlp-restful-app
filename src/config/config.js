@@ -4,6 +4,7 @@ const envVarsSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
+    OPENAI_API_KEY: Joi.string().required().description('OpenAI API key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
     JWT_RESET_PASSWORD_EXPIRATION_MINUTES: Joi.number()
@@ -53,5 +54,8 @@ module.exports = {
       },
     },
     from: envVars.EMAIL_FROM,
+  },
+  openAi: {
+    apiKey: envVars.OPENAI_API_KEY,
   },
 };

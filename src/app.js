@@ -5,6 +5,7 @@ const compression = require('compression');
 const cors = require('cors');
 const passport = require('passport');
 const httpStatus = require('http-status');
+const admin = require('firebase-admin');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const { jwtStrategy } = require('./config/passport');
@@ -29,6 +30,11 @@ app.use(express.json());
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
+// firebase firestore orm
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+});
+
 // sanitize request data
 app.use(xss());
 
@@ -41,6 +47,7 @@ app.options('*', cors());
 
 // jwt authentication
 app.use(passport.initialize());
+// TODO connect with Firebase
 passport.use('jwt', jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
@@ -61,5 +68,6 @@ app.use(errorConverter);
 
 // handle error
 app.use(errorHandler);
+
 
 module.exports = app;

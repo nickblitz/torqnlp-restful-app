@@ -1,26 +1,11 @@
 # RESTful API Node Server Boilerplate
 
-[![Build Status](https://travis-ci.org/hagopj13/node-express-boilerplate.svg?branch=master)](https://travis-ci.org/hagopj13/node-express-boilerplate)
-[![Coverage Status](https://coveralls.io/repos/github/hagopj13/node-express-boilerplate/badge.svg?branch=master)](https://coveralls.io/github/hagopj13/node-express-boilerplate?branch=master)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-
-A boilerplate/starter project for quickly building RESTful APIs using Node.js, Express, and Mongoose.
-
-By running a single command, you will get a production-ready Node.js app installed and fully configured on your machine. The app comes with many built-in features, such as authentication using JWT, request validation, unit and integration tests, continuous integration, docker support, API documentation, pagination, etc. For more details, check the features list below.
+An express API to serve endpoints to the React application on firebase. The API is ran on a Firebase function.
+This repo serves as a dependency that is imported here https://github.com/nickblitz/torqnlp-react-app/blob/main/functions/index.js
 
 ## Quick Start
 
-To create a project, simply run:
-
-```bash
-npx create-nodejs-express-app <project-name>
-```
-
-Or
-
-```bash
-npm init nodejs-express-app <project-name>
-```
+View instructions here on how to start the Express app in Firebase http://127.0.0.1:5001/torqnlp/us-central1/app
 
 ## Manual Installation
 
@@ -90,18 +75,6 @@ cp .env.example .env
 
 ## Commands
 
-Running locally:
-
-```bash
-yarn dev
-```
-
-Running in production:
-
-```bash
-yarn start
-```
-
 Testing:
 
 ```bash
@@ -113,19 +86,6 @@ yarn test:watch
 
 # run test coverage
 yarn coverage
-```
-
-Docker:
-
-```bash
-# run docker container in development mode
-yarn docker:dev
-
-# run docker container in production mode
-yarn docker:prod
-
-# run all tests in a docker container
-yarn docker:test
 ```
 
 Linting:
@@ -146,31 +106,7 @@ yarn prettier:fix
 
 ## Environment Variables
 
-The environment variables can be found and modified in the `.env` file. They come with these default values:
-
-```bash
-# Port number
-PORT=3000
-
-# URL of the Mongo DB
-MONGODB_URL=mongodb://127.0.0.1:27017/node-boilerplate
-
-# JWT
-# JWT secret key
-JWT_SECRET=thisisasamplesecret
-# Number of minutes after which an access token expires
-JWT_ACCESS_EXPIRATION_MINUTES=30
-# Number of days after which a refresh token expires
-JWT_REFRESH_EXPIRATION_DAYS=30
-
-# SMTP configuration options for the email service
-# For testing, you can use a fake SMTP service like Ethereal: https://ethereal.email/create
-SMTP_HOST=email-server
-SMTP_PORT=587
-SMTP_USERNAME=email-server-username
-SMTP_PASSWORD=email-server-password
-EMAIL_FROM=support@yourapp.com
-```
+The environment variables will live in your functions folder here https://github.com/nickblitz/torqnlp-react-app/tree/main/functions. 
 
 ## Project Structure
 
@@ -189,72 +125,18 @@ src\
  |--index.js        # App entry point
 ```
 
-## API Documentation
-
-To view the list of available APIs and their specifications, run the server and go to `http://localhost:3000/v1/docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
 
 ### API Endpoints
 
 List of available routes:
 
-**Auth routes**:\
-`POST /v1/auth/register` - register\
-`POST /v1/auth/login` - login\
-`POST /v1/auth/refresh-tokens` - refresh auth tokens\
-`POST /v1/auth/forgot-password` - send reset password email\
-`POST /v1/auth/reset-password` - reset password\
-`POST /v1/auth/send-verification-email` - send verification email\
-`POST /v1/auth/verify-email` - verify email
+**Fine-Tuned Models routes**:\
+`GET /v1/fineTunedModel` - get's all finedTunedModels created
+`POST /v1/fineTunedModel` - Creates a fine tuned model
+`DELETE /v1/fineTunedModel/:modelId` - delete fine tuned model
+`POST /v1/fineTunedModel/:modelId/completion` - Creates a completion with a given prompt and model
 
-**User routes**:\
-`POST /v1/users` - create a user\
-`GET /v1/users` - get all users\
-`GET /v1/users/:userId` - get user\
-`PATCH /v1/users/:userId` - update user\
-`DELETE /v1/users/:userId` - delete user
 
-## Error Handling
-
-The app has a centralized error handling mechanism.
-
-Controllers should try to catch the errors and forward them to the error handling middleware (by calling `next(error)`). For convenience, you can also wrap the controller inside the catchAsync utility wrapper, which forwards the error.
-
-```javascript
-const catchAsync = require('../utils/catchAsync');
-
-const controller = catchAsync(async (req, res) => {
-  // this error will be forwarded to the error handling middleware
-  throw new Error('Something wrong happened');
-});
-```
-
-The error handling middleware sends an error response, which has the following format:
-
-```json
-{
-  "code": 404,
-  "message": "Not found"
-}
-```
-
-When running in development mode, the error response also contains the error stack.
-
-The app has a utility ApiError class to which you can attach a response code and a message, and then throw it from anywhere (catchAsync will catch it).
-
-For example, if you are trying to get a user from the DB who is not found, and you want to send a 404 error, the code should look something like:
-
-```javascript
-const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
-const User = require('../models/User');
-
-const getUser = async (userId) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-};
-```
 
 ## Validation
 
@@ -288,18 +170,6 @@ router.post('/users', auth(), userController.createUser);
 ```
 
 These routes require a valid JWT access token in the Authorization request header using the Bearer schema. If the request does not contain a valid access token, an Unauthorized (401) error is thrown.
-
-**Generating Access Tokens**:
-
-An access token can be generated by making a successful call to the register (`POST /v1/auth/register`) or login (`POST /v1/auth/login`) endpoints. The response of these endpoints also contains refresh tokens (explained below).
-
-An access token is valid for 30 minutes. You can modify this expiration time by changing the `JWT_ACCESS_EXPIRATION_MINUTES` environment variable in the .env file.
-
-**Refreshing Access Tokens**:
-
-After the access token expires, a new access token can be generated, by making a call to the refresh token endpoint (`POST /v1/auth/refresh-tokens`) and sending along a valid refresh token in the request body. This call returns a new access token and a new refresh token.
-
-A refresh token is valid for 30 days. You can modify this expiration time by changing the `JWT_REFRESH_EXPIRATION_DAYS` environment variable in the .env file.
 
 ## Authorization
 
@@ -346,26 +216,7 @@ This app uses pm2 in production mode, which is already configured to store the l
 
 Note: API request information (request url, response code, timestamp, etc.) are also automatically logged (using [morgan](https://github.com/expressjs/morgan)).
 
-## Custom Mongoose Plugins
 
-The app also contains 2 custom mongoose plugins that you can attach to any mongoose model schema. You can find the plugins in `src/models/plugins`.
-
-```javascript
-const mongoose = require('mongoose');
-const { toJSON, paginate } = require('./plugins');
-
-const userSchema = mongoose.Schema(
-  {
-    /* schema definition here */
-  },
-  { timestamps: true }
-);
-
-userSchema.plugin(toJSON);
-userSchema.plugin(paginate);
-
-const User = mongoose.model('User', userSchema);
-```
 
 ### toJSON
 
@@ -425,9 +276,6 @@ To prevent a certain file or directory from being linted, add it to `.eslintigno
 
 To maintain a consistent coding style across different IDEs, the project contains `.editorconfig`
 
-## Contributing
-
-Contributions are more than welcome! Please check out the [contributing guide](CONTRIBUTING.md).
 
 ## Inspirations
 
